@@ -1,16 +1,17 @@
 class No:
-    """
-    Nó básico para ser usado nas estruturas de fila.
-    """
+    """Nó básico para estruturas de lista ligada."""
     def __init__(self, dados):
         self.dados = dados
         self.proximo = None
 
+
 class FilaPrioridade:
     """
-    Fila de prioridade customizada. Processos com menor valor de prioridade
-    são atendidos primeiro.
+    Fila de prioridade customizada implementada com lista ligada.
+    Menor valor de prioridade = maior prioridade (atendido primeiro).
+    Complexidade: inserção O(n), remoção O(1).
     """
+    
     def __init__(self):
         self.inicio = None
     
@@ -18,14 +19,15 @@ class FilaPrioridade:
         return self.inicio is None
     
     def inserir(self, processo):
+        """Insere processo mantendo ordem de prioridade."""
         novo_no = No(processo)
         
-        # Caso 1: A fila está vazia ou o novo processo tem a maior prioridade.
+        # Caso especial: fila vazia ou processo tem maior prioridade
         if self.esta_vazia() or processo.prioridade < self.inicio.dados.prioridade:
             novo_no.proximo = self.inicio
             self.inicio = novo_no
         else:
-            # Caso 2: Percorrer a fila para encontrar a posição correta.
+            # Encontra posição correta na fila ordenada
             atual = self.inicio
             while (atual.proximo is not None and
                    atual.proximo.dados.prioridade <= processo.prioridade):
@@ -35,6 +37,7 @@ class FilaPrioridade:
             atual.proximo = novo_no
     
     def remover(self):
+        """Remove e retorna o processo de maior prioridade."""
         if self.esta_vazia():
             return None
         
@@ -50,10 +53,13 @@ class FilaPrioridade:
             atual = atual.proximo
         return " -> ".join(elementos) if elementos else "Fila de Prioridade Vazia"
 
+
 class FilaFIFO:
     """
-    Fila simples customizada, segue a política First-In, First-Out.
+    Fila FIFO (First-In, First-Out) implementada com lista ligada.
+    Complexidade: inserção O(1), remoção O(1).
     """
+    
     def __init__(self):
         self.inicio = None
         self.fim = None
@@ -62,6 +68,7 @@ class FilaFIFO:
         return self.inicio is None
     
     def inserir(self, processo):
+        """Insere processo no final da fila."""
         novo_no = No(processo)
         if self.esta_vazia():
             self.inicio = self.fim = novo_no
@@ -70,12 +77,14 @@ class FilaFIFO:
             self.fim = novo_no
     
     def remover(self):
+        """Remove e retorna o primeiro processo da fila."""
         if self.esta_vazia():
             return None
         
         processo_removido = self.inicio.dados
         self.inicio = self.inicio.proximo
         
+        # Se ficou vazia, atualiza fim também
         if self.inicio is None:
             self.fim = None
             
